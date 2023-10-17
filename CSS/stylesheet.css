@@ -1,0 +1,52 @@
+/* Cascade Style Sheet for this website */
+
+
+.entirepage {
+    width: 800px;
+    margin: auto;
+    font-size: 12px;
+    color: darkgrey;
+    background-color: white;
+}
+
+.menu {
+    list-style-type: none;
+}
+
+.menu>li {
+    color: blue;
+    border: 1px solid black;
+    display: inline;
+}
+
+.menu>li>a {
+    text-decoration: none;
+    color: white;
+    background-color: blue;
+}
+
+.headers {
+    min-height: 48px;
+    text-align: center;
+}
+
+.footers {
+    background-color: black;
+    color: white;
+    font-size: 10px;
+    text-align: right;
+}
+
+.error {
+    color: red;
+}
+
+input,
+textarea {
+    width: 400px;
+}
+
+input[type=submit],
+input[type=radio] {
+    width: auto;
+}
