@@ -34,10 +34,11 @@ function showFormField($fieldName, $label, $type, $formData, $options = NULL)
         case "radio":
             $fieldValue = $formData[$fieldName];
             foreach ($options as $key => $value) {
-                echo "<input type=$type name=$fieldName id=radio_$key ";
+                $radioId = "$fieldName" . "_" . "$key";
+                echo "<input type=$type name=$fieldName id=$radioId ";
                 if ($key == $fieldValue) echo "checked";
                 echo " value=$key>";
-                echo  "<label for=radio_$key >$value</label>";
+                echo  "<label for=$radioId >$value</label>";
             }
             break;
         default:
