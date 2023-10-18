@@ -2,7 +2,7 @@
 
 function authenticateUser($user, $password)
 {
-    if (trim($user[2]) == $password) {
+    if (trim($user['password']) == $password) {
         $result = RESULT_OK;
     } else {
         $result = RESULT_WRONG_PASSWORD;

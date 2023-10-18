@@ -20,26 +20,15 @@ function getLoginData()
     return $loginData;
 }
 
-function showLoginForm($loginData)
+
+function showLoginForm($formData)
 {
-    echo '
-    <form method="POST" action="index.php">
-
-        <label for="email">Email:</label>
-        <input type="text" name="email" id="email" value="' . $loginData['email'] . '"></br>
-        <span class="error">' . $loginData['emailErr'] . '</span>
-        </br></br>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" value="' . $loginData['password'] . '"></br>
-        <span class="error">' . $loginData['passwordErr'] . '</span>
-        </br></br>
-
-        <input hidden name="page" value="login"></input>
-
-        <button type="submit">Login</button>
-    </form>';
+    showFormStart();
+    showFormField('email', 'Email:', 'email', $formData);
+    showFormField('password', 'Password:', 'password', $formData);
+    showFormEnd('login', 'submit');
 }
+
 
 function validateLoginAttempt($loginData)
 {
@@ -59,7 +48,7 @@ function validateLoginAttempt($loginData)
     $result = authenticateUser($user, $password);
 
     if ($result == RESULT_OK) {
-        $name = $user[1];
+        $name = $user['name'];
         doLoginUser($name);
         $loginData['page'] = 'home';
     } else {

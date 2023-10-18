@@ -15,15 +15,25 @@ echo "Connected successfully!";
 
 
 // $sql = "INSERT INTO users (id, email, name, password)
-// VALUES ('2', 'piet@hotmail.com', 'piet', 'pietje123')";
+// VALUES ('3', 'sjaak@hotmail.com', 'sjaak', 'sjaakie123')";
 
 $sql = "SELECT * FROM users";
-echo $sql;
+// echo $sql;
 
-if (mysqli_query($conn, $sql)) {
-    echo "New record created successfully!";
-} else {
-    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+
+$result = mysqli_query($conn, $sql);
+foreach ($result as $row) {
+    var_dump($row);
+    // do something with each row
 }
+
+
+
+
+// if (mysqli_query($conn, $sql)) {
+//     echo "New record created successfully!";
+// } else {
+//     echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+// }
 
 mysqli_close($conn);
