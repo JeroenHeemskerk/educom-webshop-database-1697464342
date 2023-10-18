@@ -44,7 +44,6 @@ function showResponsePage($pageData)
     endDocument();
 };
 
-
 //input is de route
 function processRequest($page)
 {
@@ -63,7 +62,8 @@ function processRequest($page)
             // ["page" => "login", "email" => ""]
             break;
         case 'register':
-            $pageData = getRegisterData();
+            $pageData = doProcessRegisterRequest();
+            break;
             // ["page" => "register", "email" => ""]
             break;
         case 'contact':
@@ -82,6 +82,24 @@ function processRequest($page)
 };
 
 // =========================================== 
+function doProcessRegisterRequest()
+{
+    $registerData = getRegisterData();
+
+    if ($registerData['valid']) {
+
+        $email = $registerData['email'];
+        $name = $registerData['name'];
+        $password = $registerData['password'];
+
+        saveUser($email, $name, $password);
+        require_once('login.php');
+        $registerData = getInitialLoginFormData();
+    }
+    return $registerData;
+}
+
+//===========================================
 
 
 function getPostVar($key, $default = "")
