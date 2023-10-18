@@ -10,7 +10,7 @@ function getInitialLoginFormData()
 
 function getLoginData()
 {
-    require_once('file-repository.php');
+
     $loginData = getInitialLoginFormData();
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         require_once('validations.php');
@@ -32,6 +32,7 @@ function showLoginForm($formData)
 
 function validateLoginAttempt($loginData)
 {
+    require_once('database-connection.php');
     $email = $loginData['email'];
     $password = $loginData['password'];
 
