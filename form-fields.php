@@ -11,11 +11,11 @@ function showFormStart()
 function showFormField($fieldName, $label, $type, $formData, $options = NULL)
 {
     echo "<label for='$fieldName'>$label</label>";
+    $fieldValue = $formData[$fieldName];
 
     switch ($type) {
 
         case "select":
-            $fieldValue = $formData[$fieldName];
             echo "<select name='$fieldName' id='$fieldName'>";
             foreach ($options as $key => $value) {
                 echo "<option value='$key'";
@@ -29,10 +29,9 @@ function showFormField($fieldName, $label, $type, $formData, $options = NULL)
             foreach ($options as $key => $value) {
                 echo " $key='$value' ";
             }
-            echo ">" . $formData[$fieldName] . "</textarea>";
+            echo ">" . $fieldValue . "</textarea>";
             break;
         case "radio":
-            $fieldValue = $formData[$fieldName];
             foreach ($options as $key => $value) {
                 $radioId = "$fieldName" . "_" . "$key";
                 echo "<input type='$type' name='$fieldName' id='$radioId' ";
@@ -42,7 +41,7 @@ function showFormField($fieldName, $label, $type, $formData, $options = NULL)
             }
             break;
         default:
-            echo "<input type='$type' name='$fieldName' id='$fieldName' value='$formData[$fieldName]'>";
+            echo "<input type='$type' name='$fieldName' id='$fieldName' value='$fieldValue'>";
     }
 
     echo "</br><span class='error'>" . $formData[$fieldName . 'Err'] . "</span></br></br>";
