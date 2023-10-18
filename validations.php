@@ -56,6 +56,7 @@ function validateRegister($registerData)
     if (empty($_POST["email"])) {
         $registerData['emailErr'] = "*Email is required";
     } else {
+        require_once('user-service.php');
         $registerData['email'] = test_input($_POST["email"]);
         // check if e-mail address is well-formed
         if (!filter_var($registerData['email'], FILTER_VALIDATE_EMAIL)) {

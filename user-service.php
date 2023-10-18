@@ -13,6 +13,7 @@ function authenticateUser($user, $password)
 
 function doesEmailExist($email)
 {
+    require_once('file-repository.php');
     $result = findUserByEmail($email);
 
     return $result["message"] == RESULT_USER_FOUND;

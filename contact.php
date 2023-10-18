@@ -9,6 +9,7 @@ function getContactData()
     $contactData = ["page" => "contact", "salutation" => " ", "name" => "", "email" => "", "phonenumber" => "", "comm_preference" => "", "message" => "", "salutationErr" => "", "nameErr" => "", "emailErr" => "", "phonenumberErr" => "", "comm_preferenceErr" => "", "messageErr" => "", "valid" => false];
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        require_once('validations.php');
         $contactData = validateContact($contactData);
     }
     return $contactData;
@@ -27,6 +28,7 @@ function showContactContent($pageData)
 
 function showContactForm($formData)
 {
+    require_once('form-fields.php');
     showFormStart();
     showFormField('salutation', NULL, 'select', $formData, SALUTATIONS);
     showFormField('name', 'Name:', 'text', $formData);

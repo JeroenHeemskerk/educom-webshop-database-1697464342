@@ -1,8 +1,6 @@
 <?php
 
-define('RESULT_USER_FOUND', 1);
 define('RESULT_OK', 0);
-define('RESULT_UNKNOWN_USER', -1);
 define('RESULT_WRONG_PASSWORD', -2);
 
 function getInitialLoginFormData()
@@ -12,9 +10,10 @@ function getInitialLoginFormData()
 
 function getLoginData()
 {
-    //initiate variables
+    require_once('file-repository.php');
     $loginData = getInitialLoginFormData();
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        require_once('validations.php');
         $loginData = validateLogin($loginData);
     }
     return $loginData;
@@ -23,6 +22,7 @@ function getLoginData()
 
 function showLoginForm($formData)
 {
+    require_once('form-fields.php');
     showFormStart();
     showFormField('email', 'Email:', 'email', $formData);
     showFormField('password', 'Password:', 'password', $formData);
@@ -44,7 +44,7 @@ function validateLoginAttempt($loginData)
         $loginData['valid'] = false;
         return $loginData;
     }
-
+    require_once('user-service.php');
     $result = authenticateUser($user, $password);
 
     if ($result == RESULT_OK) {

@@ -1,4 +1,6 @@
 <?php
+define('RESULT_UNKNOWN_USER', -1);
+define('RESULT_USER_FOUND', 1);
 
 function findUserByEmail($email)
 {

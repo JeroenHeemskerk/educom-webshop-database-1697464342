@@ -6,6 +6,7 @@ function getRegisterData()
     $pageData = ["page" => "register", "name" => "", "email" => "", "password" => "", "repeatedPassword" => "", "nameErr" => "", "emailErr" => "", "passwordErr" => "", "repeatedPasswordErr" => "", "valid" => false];
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        require_once('validations.php');
         $pageData = validateRegister($pageData);
     }
 
@@ -14,6 +15,7 @@ function getRegisterData()
 
 function showRegisterForm($formData)
 {
+    require_once('form-fields.php');
     showFormStart();
     showFormField('name', 'Name:', 'text', $formData);
     showFormField('email', 'Email:', 'email', $formData);

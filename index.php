@@ -1,16 +1,7 @@
 <?php
 include('session-manager.php');
-include('validations.php');
-include('login.php');
-include('home.php');
-include('about.php');
-include('contact.php');
-include('register.php');
-include('file-repository.php');
-include('user-service.php');
-include('form-fields.php');
-session_start();
 
+session_start();
 
 // ===================================
 // MAIN APP
@@ -58,15 +49,18 @@ function processRequest($page)
             $pageData['page'] = $page;
             break;
         case 'login':
+            require_once('login.php');
             $pageData = getLoginData();
             // ["page" => "login", "email" => ""]
             break;
         case 'register':
+            require_once('register.php');
             $pageData = doProcessRegisterRequest();
             break;
             // ["page" => "register", "email" => ""]
             break;
         case 'contact':
+            require_once('contact.php');
             $pageData = getContactData();
             // ["page" => "register", "email" => ""]
             break;
@@ -100,6 +94,7 @@ function doProcessRegisterRequest()
         $name = $registerData['name'];
         $password = $registerData['password'];
 
+        require_once('file-repository.php');
         saveUser($email, $name, $password);
         require_once('login.php');
         $registerData = getInitialLoginFormData();
@@ -186,18 +181,23 @@ function showContent($pageData)
 
     switch ($page) {
         case 'home':
+            require_once('home.php');
             showHomeContent();
             break;
         case 'about':
+            require_once('about.php');
             showAboutContent();
             break;
         case 'contact':
+            require_once('contact.php');
             showContactContent($pageData);
             break;
         case 'register':
+            require_once('register.php');
             showRegisterForm($pageData);
             break;
         case 'login':
+            require_once('login.php');
             showLoginForm($pageData);
             break;
         default:
