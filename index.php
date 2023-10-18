@@ -78,8 +78,16 @@ function processRequest($page)
             showPageNotFound();
     }
 
+    $pageData['menu'] = array('home' => 'HOME', 'about' => 'ABOUT', 'contact' => 'CONTACT');
+    if (isUserLoggedIn()) {
+        $pageData['menu']['logout'] = "LOGOUT " . getLoggedInUserName();
+    } else {
+        $pageData['menu']['register'] = "REGISTER";
+        $pageData['menu']['login'] = "LOGIN";
+    }
     return $pageData;
-};
+}
+
 
 // =========================================== 
 function doProcessRegisterRequest()
@@ -138,7 +146,7 @@ function showBodySection($pageData)
 {
     echo '    <body>' . PHP_EOL;
     showHeader($pageData['page']);
-    showMenu();
+    showMenu($pageData);
     showContent($pageData);
     showFooter();
     echo '    </body>' . PHP_EOL;
@@ -156,22 +164,16 @@ function showHeader($pageTitle)
     echo '<h1 class="headers">' . $pageTitle . ' page</h1>';
 }
 
-function showMenu()
+function showMenu($data)
 {
-    echo '<nav>
-          <ul class="menu">';
-    showMenuItem('home', 'HOME');
-    showMenuItem('about', 'ABOUT');
-    showMenuItem('contact', 'CONTACT');
-    if (isUserLoggedIn()) {
-        showMenuItem('logout', 'LOGOUT ' . getLoggedInUserName());
-    } else {
-        showMenuItem('login', 'LOGIN');
-        showMenuItem('register', 'REGISTER');
+    echo '<nav>';
+    echo '<ul class="menu">';
+    foreach ($data['menu'] as $key => $page) {
+        showMenuItem($key, $page);
     }
-    echo '</ul>
-        </nav>';
+    echo '</ul>' . PHP_EOL . '</nav>' . PHP_EOL;
 }
+
 
 function showMenuItem($linkName, $buttonText)
 {
