@@ -7,7 +7,12 @@ function getRegisterData()
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         require_once('validations.php');
-        $pageData = validateRegister($pageData);
+        try {
+            $pageData = validateRegister($pageData);
+        } catch (Exception $e) {
+            logError("registration failed: " . $e->getMessage());
+            $pageData['genericErr'] = "Registreren is op dit moment niet mogelijk. Probeer het later nog eens.";
+        }
     }
 
     return $pageData;

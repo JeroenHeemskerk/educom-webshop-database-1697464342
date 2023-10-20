@@ -13,13 +13,8 @@ function authenticateUser($user, $password)
 
 function doesEmailExist($email)
 {
-    require_once('file-repository.php');
+    require_once('database-connection.php');
     $result = findUserByEmail($email);
 
     return $result["message"] == RESULT_USER_FOUND;
-}
-
-function storeUser($email, $name, $password)
-{
-    // Ik begrijp niet wat in deze functie zou moeten komen. Ik heb al de functie saveUser. 
 }

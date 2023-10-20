@@ -68,11 +68,15 @@ function processRequest($page)
             doLogOut();
             $pageData['page'] = 'home';
             break;
+        case 'webshop':
+            //Hier komt later nog een functie
+            $pageData['page'] = $page;
+            break;
         default:
-            showPageNotFound();
+            $pageData['page'] = 'not found';
     }
-
-    $pageData['menu'] = array('home' => 'HOME', 'about' => 'ABOUT', 'contact' => 'CONTACT');
+    //webshop pagina toegevoegd
+    $pageData['menu'] = array('home' => 'HOME', 'about' => 'ABOUT', 'contact' => 'CONTACT', 'webshop' => 'WEBSHOP');
     if (isUserLoggedIn()) {
         $pageData['menu']['logout'] = "LOGOUT " . getLoggedInUserName();
     } else {
@@ -94,10 +98,15 @@ function doProcessRegisterRequest()
         $name = $registerData['name'];
         $password = $registerData['password'];
 
-        require_once('file-repository.php');
-        saveUser($email, $name, $password);
-        require_once('login.php');
-        $registerData = getInitialLoginFormData();
+        require_once('database-connection.php');
+        try {
+            saveUser($email, $name, $password);
+            require_once('login.php');
+            $registerData = getInitialLoginFormData();
+        } catch (Exception $e) {
+            logError("registration failed: " . $e->getMessage());
+            $registerData['genericErr'] = "Registreren is op dit moment niet mogelijk. Probeer het later nog eens.";
+        }
     }
     return $registerData;
 }
@@ -123,7 +132,6 @@ function getArrayVar($array, $key, $default = '')
 // ===================================================
 
 
-
 function beginDocument()
 {
     echo "<!doctype html>
@@ -142,6 +150,8 @@ function showBodySection($pageData)
     echo '    <body>' . PHP_EOL;
     showHeader($pageData['page']);
     showMenu($pageData);
+    //hier nieuwe functie showGenericErr aangeroepen
+    showGenericError($pageData);
     showContent($pageData);
     showFooter();
     echo '    </body>' . PHP_EOL;
@@ -174,6 +184,13 @@ function showMenuItem($linkName, $buttonText)
 {
     echo '<li><a href="index.php?page=' . $linkName . '">' . $buttonText . '</a></li>';
 }
+
+//deze functie toegevoegd
+function showGenericError($pageData)
+{
+    echo "</br><span class='error'>" . getArrayVar($pageData, "genericErr") . "</span></br></br>";
+}
+
 
 function showContent($pageData)
 {
@@ -219,4 +236,10 @@ function showFooter()
 function showPageNotFound()
 {
     echo 'Page not found';
+}
+
+//nieuwe functie
+function logError($message)
+{
+    echo "Logging to logfile: $message";
 }

@@ -28,6 +28,7 @@ function validateLogin($loginData)
         $loginData['password'] = test_input(getPostVar("password"));
     }
 
+
     $loginData['valid'] = empty($loginData['emailErr']) && empty($loginData['passwordErr']);
 
     if ($loginData['valid'] == true) {
