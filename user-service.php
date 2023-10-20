@@ -16,5 +16,5 @@ function doesEmailExist($email)
     require_once('database-connection.php');
     $result = findUserByEmail($email);
 
-    return $result["message"] == RESULT_USER_FOUND;
+    return $result != null;
 }

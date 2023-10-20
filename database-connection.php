@@ -1,11 +1,4 @@
 <?php
-define('RESULT_UNKNOWN_USER', -1);
-define('RESULT_USER_FOUND', 1);
-
-define('CONNECTION_ERROR', -2);
-define('DATABASE_ERROR', -3);
-define('QUERY_SUCCESS', 4);
-
 
 function connectToDatabase()
 {
@@ -41,18 +34,8 @@ function findUserByEmail($email)
             //throw nog catchen!
         }
 
-        // in $user zit nu een associative array met de juiste user
-        // (met id, naam, email en password), of NULL
-        $user = mysqli_fetch_assoc($result);
-        // return $user;
-
-        // creeer een default response 
-        $response = ["message" => RESULT_UNKNOWN_USER, "user" => []];
-
-        if ($user != null) {
-            $response["message"] = RESULT_USER_FOUND;
-            $response["user"] = $user;
-        }
+        $response = mysqli_fetch_assoc($result);
+        var_dump($response);
     } finally {
         //close connection
         mysqli_close($conn);
@@ -60,6 +43,7 @@ function findUserByEmail($email)
 
     return $response;
 }
+
 
 function saveUser($email, $name, $password)
 {

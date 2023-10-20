@@ -10,7 +10,6 @@ function getInitialLoginFormData()
 
 function getLoginData()
 {
-
     $loginData = getInitialLoginFormData();
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         require_once('validations.php');
@@ -36,17 +35,16 @@ function validateLoginAttempt($loginData)
     $email = $loginData['email'];
     $password = $loginData['password'];
     try {
-        $result = findUserByEmail($email);
-        $message = $result['message'];
-        $user = $result['user'];
+        //user is nu een array met email, name en password OF null
+        $user = findUserByEmail($email);
 
-        if ($message != RESULT_USER_FOUND) {
+        if ($user == null) {
             $loginData['emailErr'] = "This email-adress is not registered";
             $loginData['valid'] = false;
             return $loginData;
         }
         require_once('user-service.php');
-        //als de connectie faalt, hoeft authenticateUser niet uitgevoerd te worden
+
         $result = authenticateUser($user, $password);
 
         if ($result == RESULT_OK) {
