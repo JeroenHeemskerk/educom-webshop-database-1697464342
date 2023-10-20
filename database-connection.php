@@ -31,7 +31,7 @@ function findUserByEmail($email)
     $conn = connectToDatabase();
 
     try {
-
+        $email = mysqli_real_escape_string($conn, $email);
         $sql = "SELECT * FROM users WHERE email='$email'";
         $result = mysqli_query($conn, $sql);
 
@@ -65,6 +65,10 @@ function saveUser($email, $name, $password)
 {
     // Create connection
     $conn = connectToDatabase();
+
+    $email = mysqli_real_escape_string($conn, $email);
+    $name = mysqli_real_escape_string($conn, $name);
+    $password = mysqli_real_escape_string($conn, $password);
 
     $sql = "INSERT INTO users (email, name, password)
     VALUES ('$email', '$name', '$password')";
