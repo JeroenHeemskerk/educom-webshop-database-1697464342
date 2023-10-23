@@ -35,6 +35,7 @@ function showResponsePage($pageData)
     endDocument();
 };
 
+
 //input is de route
 function processRequest($page)
 {
@@ -216,6 +217,10 @@ function showContent($pageData)
         case 'login':
             require_once('login.php');
             showLoginForm($pageData);
+            break;
+        case 'webshop':
+            require_once('webshop.php');
+            showWebshopContent();
             break;
         default:
             showPageNotFound();

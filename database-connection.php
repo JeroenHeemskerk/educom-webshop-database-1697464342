@@ -35,7 +35,6 @@ function findUserByEmail($email)
         }
 
         $response = mysqli_fetch_assoc($result);
-        var_dump($response);
     } finally {
         //close connection
         mysqli_close($conn);
