@@ -74,6 +74,10 @@ function processRequest($page)
             $pageData = getWebshopData();
             // $pageData['page'] = $page;
             break;
+        case 'product':
+            require_once('product.php');
+            $pageData = getProductData();
+            break;
         default:
             $pageData['page'] = 'not found';
     }
@@ -242,7 +246,6 @@ function showPageNotFound()
     echo 'Page not found';
 }
 
-//nieuwe functie
 function logError($message)
 {
     echo "Logging to logfile: $message";

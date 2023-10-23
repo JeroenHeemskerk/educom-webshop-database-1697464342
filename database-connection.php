@@ -31,7 +31,6 @@ function findUserByEmail($email)
         //als de query niet goed is gegaan
         if (!$result) {
             throw new Exception("select user failed, sql:$sql, error:" . mysqli_error($conn));
-            //throw nog catchen!
         }
 
         $response = mysqli_fetch_assoc($result);
@@ -60,9 +59,33 @@ function saveUser($email, $name, $password)
         $result = mysqli_query($conn, $sql);
 
         if (!$result) {
-            throw new Exception("saving user failed, sql:$sql, error", mysqli_error($conn));
+            throw new Exception("saving user failed, sql:$sql, error" . mysqli_error($conn));
         }
     } finally {
         mysqli_close($conn);
     }
+}
+
+function getProductsFromDatabase()
+{
+    //een exception moet ín het try-blok
+    //IN een try blok kan iets mis gaan
+    $conn = connectToDatabase();
+
+
+    $sql = "SELECT * FROM products";
+    try {
+        $result = mysqli_query($conn, $sql);
+        if (!$result) {
+            throw new Exception("getting products failed, sql:$sql, error" . mysqli_error($conn));
+        }
+        $productsData = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    } finally {
+        mysqli_close($conn);
+    }
+
+    //ik krijg nu een assoc array terug met 5 elementen (0 t/m 4) waarin weer 5 arrays zitten 
+    // met de product-data erin. 
+
+    return $productsData;
 }
