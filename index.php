@@ -70,8 +70,9 @@ function processRequest($page)
             $pageData['page'] = 'home';
             break;
         case 'webshop':
-            //Hier komt later nog een functie
-            $pageData['page'] = $page;
+            require_once('webshop.php');
+            $pageData = getWebshopData();
+            // $pageData['page'] = $page;
             break;
         default:
             $pageData['page'] = 'not found';
@@ -151,7 +152,6 @@ function showBodySection($pageData)
     echo '    <body>' . PHP_EOL;
     showHeader($pageData['page']);
     showMenu($pageData);
-    //hier nieuwe functie showGenericErr aangeroepen
     showGenericError($pageData);
     showContent($pageData);
     showFooter();
@@ -186,7 +186,6 @@ function showMenuItem($linkName, $buttonText)
     echo '<li><a href="index.php?page=' . $linkName . '">' . $buttonText . '</a></li>';
 }
 
-//deze functie toegevoegd
 function showGenericError($pageData)
 {
     echo "</br><span class='error'>" . getArrayVar($pageData, "genericErr") . "</span></br></br>";
@@ -220,7 +219,7 @@ function showContent($pageData)
             break;
         case 'webshop':
             require_once('webshop.php');
-            showWebshopContent();
+            showWebshopContent($pageData);
             break;
         default:
             showPageNotFound();
