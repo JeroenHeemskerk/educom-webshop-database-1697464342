@@ -125,14 +125,17 @@ function getPostVar($key, $default = "")
     return getArrayVar($_POST, $key, $default);
 };
 
+
 function getUrlVar($key, $default = '')
 {
     return getArrayVar($_GET, $key, $default);
 };
 
+
 function getArrayVar($array, $key, $default = '')
 {
     return isset($array[$key]) ? $array[$key] : $default;
+    // return isset($_GET['id']) ? ...
 }
 
 // ===================================================
@@ -224,6 +227,10 @@ function showContent($pageData)
         case 'webshop':
             require_once('webshop.php');
             showWebshopContent($pageData);
+            break;
+        case 'product':
+            require_once('product.php');
+            showProductContent($pageData);
             break;
         default:
             showPageNotFound();
