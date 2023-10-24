@@ -42,14 +42,4 @@ function showProductContent($pageData)
 
 function addToCart($product)
 {
-    // bedoeling is dat products die je aan je cart add in $_SESSION terecht komen
-
-    // $_SESSION['cart']
-
-    // opdracht: hoe zoek je in PHP naar een array met een bepaalde key/value
-
-    // als er al een product bestaat in $_SESSION['cart'] met dezelfde product id
-    // dan verhoog alleen de 'amount'
-    // anders voeg nieuwe array toe met de product details van dit product, en 
-    // ook key => value : amount => 1
 }
