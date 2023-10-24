@@ -17,12 +17,13 @@
     color: blue;
     border: 1px solid black;
     display: inline;
+    margin-right: 5px;
 }
 
 .menu>li>a {
     text-decoration: none;
     color: white;
-    background-color: blue;
+    background-color: rgb(82, 82, 127);
 }
 
 .headers {
@@ -49,4 +50,40 @@ textarea {
 input[type=submit],
 input[type=radio] {
     width: auto;
+}
+
+.card-outer-container {
+    margin-bottom: 15px;
+}
+
+.card-inner-container {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.card-img {
+    max-height: 150px;
+    max-width: 200px;
+    object-fit: cover;
+}
+
+.product-img {
+    margin-bottom: 20px;
+    height: 50%;
+    width: 50%;
+}
+
+.button {
+    margin-bottom: 20px;
+}
+
+.product-text {
+    color: black;
+}
+
+a:link {
+    text-decoration: none;
 }

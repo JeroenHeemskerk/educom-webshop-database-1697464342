@@ -50,6 +50,24 @@ function showFormField($fieldName, $label, $type, $formData, $options = NULL)
 function showFormEnd($page, $submitButtonText)
 {
     echo "<input hidden name='page' value='$page'></input>
-            <button type='submit'>" . $submitButtonText . "</button>
+            <button type='submit'class ='button btn btn-outline-secondary'>" . $submitButtonText . "</button>
             </form>";
+}
+
+
+//nieuwe functie: de html voor de productpagina staat nu hier. 
+// Deze functie kan ik later (voor shoppingcart) ook nog gebruiken.
+function showProduct($product)
+{
+    echo "<div class='card-body'> <img class = 'product-img' src='" . $product['image_url'] . "' alt='soap image' width='400' height='300'></br>
+    <h4 class = 'card-title'>" . $product["name"] . "</h4></br>
+    <p class = 'card-text'>" . $product["description"] . "</p></br>
+    &#8364;" . ($product['pricetag'] / 100) . "</br> </div>";
+    showFormStart();
+
+    echo "<input hidden name='id' value='" . $product['id'] . "'>
+            <input hidden name='action' value='addToCart'>";
+
+    showFormEnd('product', 'add to cart');
+    //maak een extra hidden input, geef hem als naam: action en als value 'addToCart'
 }

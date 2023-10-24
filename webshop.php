@@ -36,12 +36,16 @@ function showWebshopContent($pageData)
 function showProductCard($product)
 {
     echo
-    "<div>
+    "<div class='card text-center card-outer-container' style='width: 50rem'>
         <a href='index.php?page=product&id=" . $product['id'] . "'>
-            <img src='" . $product['image_url'] . "' alt='soap image' width='400' height='300'></br>
-            <span>" . $product['name'] . "</span>
-            <p> " . $product['description'] . "</p>
-            <span>&#8364;" . ($product['pricetag'] / 100) . "</span>
+            <div class='card-inner-container'>
+                <img class='card-img' src='" . $product['image_url'] . "' alt='soap image'></br>
+                <div class ='product-text card-body'>
+                    <h4 class = 'card-title'>" . $product['name'] . "</h4>
+                    <p class = 'card-text'> " . $product['description'] . "</p>
+                    <span>&#8364;" . ($product['pricetag'] / 100) . "</span>
+                </div>
+            </div>
         </a>
-        </div>";
+    </div>";
 }

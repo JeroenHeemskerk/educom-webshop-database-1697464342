@@ -36,17 +36,20 @@ function showProductContent($pageData)
 {
     require_once('form-fields.php');
     $product = $pageData['product'];
-    echo "<img src='" . $product['image_url'] . "' alt='soap image' width='400' height='300'></br>";
-    echo $product["name"] . "</br>";
-    echo $product["description"] . "</br>";
-    echo "&#8364;" . ($product['pricetag'] / 100) . "</br>";
-
-    showFormStart();
-    echo "<input hidden name='id' value='" . $product['id'] . "'>";
-    showFormEnd('product', 'add to cart');
+    showProduct($product);
 }
 
 
 function addToCart($product)
 {
+    // bedoeling is dat products die je aan je cart add in $_SESSION terecht komen
+
+    // $_SESSION['cart']
+
+    // opdracht: hoe zoek je in PHP naar een array met een bepaalde key/value
+
+    // als er al een product bestaat in $_SESSION['cart'] met dezelfde product id
+    // dan verhoog alleen de 'amount'
+    // anders voeg nieuwe array toe met de product details van dit product, en 
+    // ook key => value : amount => 1
 }
