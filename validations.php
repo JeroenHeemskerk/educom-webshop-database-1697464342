@@ -10,24 +10,43 @@ function test_input($data)
     return $data;
 }
 
+
+function collectRequiredField($data, $key, $label)
+{
+    $data[$key] = test_input(getPostVar($key));
+    if (empty($data[$key])) {
+        $data[$key . 'Err'] = "*$label is required";
+    }
+    return $data;
+}
+
+function collectAndValidateEmail($data, $key, $label)
+{
+    $data = collectRequiredField($data, $key, $label);
+    // check if e-mail address is well-formed 
+    if (empty($data[$key . 'Err']) && !filter_var($data[$key], FILTER_VALIDATE_EMAIL)) {
+        $data[$key . 'Err'] = "*Invalid email format";
+    }
+    return $data;
+}
+
+function collectAndValidateName($data, $key, $label)
+{
+    $data = collectRequiredField($data, $key, $label);
+
+    // check if name only contains letters and whitespace
+    if (!preg_match("/^[a-zA-Z-' ]*$/", $data[$key])) {
+        $data[$key . 'Err'] = "*Only letters and white space allowed";
+    }
+    return $data;
+}
+
+//====================================================
+
 function validateLogin($loginData)
 {
-    if (empty(getPostVar("email"))) {
-        $loginData['emailErr'] = "*Email is required";
-    } else {
-        $loginData['email'] = test_input(getPostVar("email"));
-        // check if e-mail address is well-formed
-        if (!filter_var($loginData['email'], FILTER_VALIDATE_EMAIL)) {
-            $loginData['emailErr'] = "*Invalid email format";
-        }
-    }
-
-    if (empty(getPostVar("password"))) {
-        $loginData['passwordErr'] = "*Password is required";
-    } else {
-        $loginData['password'] = test_input(getPostVar("password"));
-    }
-
+    $loginData = collectAndValidateEmail($loginData, "email", "Email");
+    $loginData = collectRequiredField($loginData, 'password', "Password");
 
     $loginData['valid'] = empty($loginData['emailErr']) && empty($loginData['passwordErr']);
 
@@ -44,34 +63,9 @@ function validateLogin($loginData)
 
 function validateRegister($registerData)
 {
-    if (empty(getPostVar("name"))) {
-        $registerData['nameErr'] = "*Name is required";
-    } else {
-        $registerData['name'] = test_input(getPostVar("name"));
-        // check if name only contains letters and whitespace
-        if (!preg_match("/^[a-zA-Z-' ]*$/", $registerData['name'])) {
-            $registerData['nameErr'] = "*Only letters and white space allowed";
-        }
-    }
-
-    if (empty(getPostVar("email"))) {
-        $registerData['emailErr'] = "*Email is required";
-    } else {
-        require_once('user-service.php');
-        $registerData['email'] = test_input(getPostVar("email"));
-        // check if e-mail address is well-formed
-        if (!filter_var($registerData['email'], FILTER_VALIDATE_EMAIL)) {
-            $registerData['emailErr'] = "*Invalid email format";
-        } else if (doesEmailExist($registerData['email'])) {
-            $registerData['emailErr'] = "*This emailadress is already registered";
-        }
-    }
-
-    if (empty(getPostVar("password"))) {
-        $registerData['passwordErr'] = "*Password is required";
-    } else {
-        $registerData['password'] = test_input(getPostVar("password"));
-    }
+    $registerData = collectAndValidateName($registerData, "name", "Name");
+    $registerData = collectAndValidateEmail($registerData, "email", "Email");
+    $registerData = collectRequiredField($registerData, "password", "Password");
 
     if (empty(getPostVar("repeatedPassword"))) {
         $registerData['repeatedPasswordErr'] = "*Password is required";
@@ -90,49 +84,13 @@ function validateRegister($registerData)
 function validateContact($contactData)
 {
     // validate for the 'POST' data
-    if (empty(getPostVar('salutation'))) {
-        $contactData['salutationErr'] = "*Salutation is required";
-    } else {
-        $contactData['salutation'] = test_input(getPostVar("salutation"));
-    }
 
-    if (empty(getPostVar("name"))) {
-        $contactData['nameErr'] = "*Name is required";
-    } else {
-        $contactData['name'] = test_input(getPostVar("name"));
-        // check if name only contains letters and whitespace
-        if (!preg_match("/^[a-zA-Z-' ]*$/", $contactData['name'])) {
-            $contactData['nameErr'] = "*Only letters and white space allowed";
-        }
-    }
-
-    if (empty(getPostVar("email"))) {
-        $contactData['emailErr'] = "*Email is required";
-    } else {
-        $contactData['email'] = test_input(getPostVar("email"));
-        // check if e-mail address is well-formed
-        if (!filter_var($contactData['email'], FILTER_VALIDATE_EMAIL)) {
-            $contactData['emailErr'] = "*Invalid email format";
-        }
-    }
-
-    if (empty(getPostVar("phonenumber"))) {
-        $contactData['phonenumberErr'] = "*Phonenumber is required";
-    } else {
-        $contactData['phonenumber'] = test_input(getPostVar("phonenumber"));
-    }
-
-    if (empty(getPostVar("comm_preference"))) {
-        $contactData['comm_preferenceErr'] = "*Communication preference is required";
-    } else {
-        $contactData['comm_preference'] = test_input(getPostVar("comm_preference"));
-    }
-
-    if (empty(getPostVar("message"))) {
-        $contactData['messageErr'] = "*Message is required";
-    } else {
-        $contactData['message'] = test_input(getPostVar("message"));
-    }
+    $contactData = collectRequiredField($contactData, "salutation", "Salutation");
+    $contactData = collectAndValidateName($contactData, "name", "Name");
+    $contactData = collectAndValidateEmail($contactData, "email", "Email");
+    $contactData = collectRequiredField($contactData, "phonenumber", "Phonenumber");
+    $contactData = collectRequiredField($contactData, "comm_preference", "Communication preference");
+    $contactData = collectRequiredField($contactData, "message", "Message");
 
     if (empty($contactData['salutationErr']) && empty($contactData['nameErr']) && empty($contactData['emailErr']) && empty($contactData['phonenumberErr']) && empty($contactData['comm_preferenceErr']) && empty($contactData['messageErr'])) {
         $contactData['valid'] = true;

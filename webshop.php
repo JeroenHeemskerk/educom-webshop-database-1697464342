@@ -43,7 +43,7 @@ function showProductCard($product)
                 <div class ='product-text card-body'>
                     <h4 class = 'card-title'>" . $product['name'] . "</h4>
                     <p class = 'card-text'> " . $product['description'] . "</p>
-                    <span>&#8364;" . ($product['pricetag'] / 100) . "</span>
+                    <span>&euro;" . number_format(($product['pricetag'] / 100), 2, ',') . "</span>
                 </div>
             </div>
         </a>

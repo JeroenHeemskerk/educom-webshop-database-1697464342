@@ -97,9 +97,9 @@ function findProductById($id)
     $conn = connectToDatabase();
 
     try {
-        //kan sql-injection ook via een query parameter?
+
         $id = mysqli_real_escape_string($conn, $id);
-        $sql = "SELECT * FROM products WHERE id='$id'";
+        $sql = "SELECT * FROM products WHERE id=$id";
         $result = mysqli_query($conn, $sql);
 
         if (!$result) {

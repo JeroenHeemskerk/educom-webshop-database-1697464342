@@ -24,6 +24,7 @@
     text-decoration: none;
     color: white;
     background-color: rgb(82, 82, 127);
+    padding: 2px;
 }
 
 .headers {
@@ -74,6 +75,11 @@ input[type=radio] {
     margin-bottom: 20px;
     height: 50%;
     width: 50%;
+}
+
+.shoppingcart-img {
+    max-height: 100px;
+    max-width: 120px;
 }
 
 .button {

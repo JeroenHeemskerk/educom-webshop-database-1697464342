@@ -3,6 +3,10 @@ include('session-manager.php');
 
 session_start();
 
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
 // ===================================
 // MAIN APP
 // ===================================
@@ -78,6 +82,10 @@ function processRequest($page)
             require_once('product.php');
             $pageData = getProductData();
             break;
+        case 'shoppingcart':
+            require_once('shoppingcart.php');
+            $pageData = getShoppingcartData();
+            break;
         default:
             $pageData['page'] = 'not found';
     }
@@ -85,6 +93,7 @@ function processRequest($page)
     $pageData['menu'] = array('home' => 'HOME', 'about' => 'ABOUT', 'contact' => 'CONTACT', 'webshop' => 'WEBSHOP');
     if (isUserLoggedIn()) {
         $pageData['menu']['logout'] = "LOGOUT " . getLoggedInUserName();
+        $pageData['menu']['shoppingcart'] = "SHOPPINGCART";
     } else {
         $pageData['menu']['register'] = "REGISTER";
         $pageData['menu']['login'] = "LOGIN";
@@ -161,6 +170,7 @@ function showBodySection($pageData)
     showHeader($pageData['page']);
     showMenu($pageData);
     showGenericError($pageData);
+    showGenericMessage($pageData);
     showContent($pageData);
     showFooter();
     echo '    </body>' . PHP_EOL;
@@ -199,6 +209,10 @@ function showGenericError($pageData)
     echo "</br><span class='error'>" . getArrayVar($pageData, "genericErr") . "</span></br></br>";
 }
 
+function showGenericMessage($pageData)
+{
+    echo "</br><span >" . getArrayVar($pageData, "genericMessage") . "</span></br></br>";
+}
 
 function showContent($pageData)
 {
@@ -232,6 +246,10 @@ function showContent($pageData)
         case 'product':
             require_once('product.php');
             showProductContent($pageData);
+            break;
+        case 'shoppingcart':
+            require_once('shoppingcart.php');
+            showShoppingCart($pageData);
             break;
         default:
             showPageNotFound();
