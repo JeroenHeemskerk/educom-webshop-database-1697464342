@@ -48,8 +48,7 @@ function validateLoginAttempt($loginData)
         $result = authenticateUser($user, $password);
 
         if ($result == RESULT_OK) {
-            $name = $user['name'];
-            doLoginUser($name);
+            doLoginUser($user);
             $loginData['page'] = 'home';
         } else {
             $loginData['passwordErr'] = "Incorrect password";

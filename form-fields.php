@@ -70,7 +70,7 @@ function showProduct($product, $userIsLoggedIn)
     //maak een extra hidden input, geef hem als naam: action en als value 'addToCart'
 }
 
-function showActionButton($page, $submitButtonText, $actionType, $productId)
+function showActionButton($page, $submitButtonText, $actionType, $productId = null)
 {
     // $page = 'product'
     // $submitButtonText = 'add to cart'

@@ -1,14 +1,5 @@
 <?php
 
-// Maak een pagina 'shoppingcart' aan die een overzicht geeft van de in de sessie 
-//bewaarde items (inclusief sub-totaal en een klein plaatje) en een berekening van 
-//de totale prijs.
-//Als je op de regel klikt dan ga je naar de 'detail' pagina van dit product. 
-//(Optioneel) kan je nog toevoegen dat je in de shoppingcart pagina het aantal bestelde 
-//producten kan verhogen of verlagen.
-
-// tweede variabele met $amount
-
 function getShoppingcartData()
 {
     $pageData = ["page" => "shoppingcart", "cart" => [], "total" => 0];
@@ -24,7 +15,6 @@ function getShoppingcartData()
 
         if (getPostVar('action') == 'addToCart') {
             $id = getPostVar('id');
-
             incrementCartAmount($id);
         }
 
@@ -34,23 +24,20 @@ function getShoppingcartData()
         }
 
         if (getPostVar('action') == 'completeOrder') {
-            //
+            //als er op de complete order button geklikt is
+            $userId = getLoggedInUserId();
+
+            completeOrder($userId);
+            //voor de order tabel nodig: user_id en total_amount
         }
     }
-
 
     //get shoppingcart items from session 
     $cart = $_SESSION['cart'];
 
     //bereken het totaal
-    $total = 0;
 
-    foreach ($cart as $product) {
-        $totalForProduct = $product['amount'] * $product['pricetag'];
-        $total = $total + $totalForProduct;
-    }
-
-    $pageData['total'] = $total;
+    $pageData['total'] = calculateTotal($cart);
 
     //========================================
 
@@ -58,6 +45,19 @@ function getShoppingcartData()
 
     return $pageData;
 }
+
+
+function calculateTotal($cart)
+{
+    $total = 0;
+
+    foreach ($cart as $product) {
+        $totalForProduct = $product['amount'] * $product['pricetag'];
+        $total = $total + $totalForProduct;
+    }
+    return $total;
+}
+
 
 
 function showShoppingCart($pageData)
@@ -72,7 +72,10 @@ function showShoppingCart($pageData)
         showProductLine($productLine);
     }
     echo
-    "<span>Total amount: &euro;" . number_format(($total / 100), 2, ",") . "</span>";
+    "<span>Total amount: &euro;" . number_format(($total / 100), 2, ",") . "</span></br></br>";
+    require_once('form-fields.php');
+    showActionButton('shoppingcart', "Complete order", 'completeOrder');
+    //'completeOrder' kan ik dan uit de post body halen. 
 }
 
 
@@ -84,13 +87,14 @@ function showProductLine($productLine)
             <a href='index.php?page=product&id=" . $productLine['id'] . "'>
                 <div class='card-inner-container'>
                     <img class='shoppingcart-img' src='" . $productLine['image_url'] . "' alt='soap image'></br>
-                    <div class ='product-text card-body'>
-                        <h8 class = 'card-title'>" . $productLine['name'] . "</h8></br>
-                        <span>Price: &euro;" . number_format(($productLine['pricetag'] / 100), 2, ',') . "</span></br>";
+                    <div class='product-text card-body'>
+                        <h8 class='card-title'>" . $productLine['name'] . "</h8></br>
+                        <span>Price: &euro;" . number_format(($productLine['pricetag'] / 100), 2, ',') . "</span></br>
+                        <div class='cart-quantity-wrapper'>";
     showActionButton('shoppingcart', '-', 'removeFromCart', $productLine['id']);
-    echo "<span>Amount: " . $productLine['amount'] . "</span></br>";
+    echo "<span>Amount: " . $productLine['amount'] . "</span>";
     showActionButton('shoppingcart', '+', 'addToCart', $productLine['id']);
-    echo "<span>Total: &euro;" . number_format(($productLine['amount'] * ($productLine['pricetag'] / 100)), 2, ",") . "</span>
+    echo "</div> <span>Total: &euro;" . number_format(($productLine['amount'] * ($productLine['pricetag'] / 100)), 2, ",") . "</span>
                     </div>
                 </div>
             </a>
@@ -98,5 +102,17 @@ function showProductLine($productLine)
 }
 
 
-//eerst record in order wegschrijven
-// dan id opvragen en dat gebruiken
+function completeOrder($userId)
+{
+    $cart = $_SESSION['cart'];
+    $total = calculateTotal($cart);
+    //total is hier in centen opgeslagen
+    require_once('database-connection.php');
+    $orderId = writeOrderToDatabase($userId, $total);
+    // in orderId zit nu de Id van de order!
+
+    writeOrderlinesToDatabase($orderId, $cart);
+}
+
+
+    // stap 3: maak je cart leeg.

@@ -66,6 +66,10 @@ function saveUser($email, $name, $password)
     }
 }
 
+// tips van Nick: 
+//als je een SUM doet in een query, dan moet je group-by
+// eventueel JOIN gebruiken
+
 function getProductsFromDatabase()
 {
     //een exception moet ín het try-blok
@@ -114,4 +118,63 @@ function findProductById($id)
 
     // in $response zit de assoc array van het betreffende product
     return $response;
+}
+
+
+function writeOrderToDatabase($userId, $total)
+{
+    // Create connection
+    $conn = connectToDatabase();
+
+    $sql = "INSERT INTO orders (user_id, total_amount)
+    VALUES ('$userId', '$total')";
+
+
+    try {
+        $result = mysqli_query($conn, $sql);
+        // returns id from the last query
+        $orderId = mysqli_insert_id($conn);
+
+        if (!$result) {
+            throw new Exception("saving order failed, sql:$sql, error" . mysqli_error($conn));
+        }
+    } finally {
+        mysqli_close($conn);
+    }
+    return $orderId;
+}
+
+
+function writeOrderlinesToDatabase($orderId, $cart)
+{
+    // in orderline moet zitten: order_id, product_id, product quantity. 
+
+    $orderlineValueArray = [];
+
+
+    foreach ($cart as $productline) {
+        $orderline = "($orderId, " . $productline['id'] . ", " . $productline['amount'] . " )";
+
+        array_push($orderlineValueArray, $orderline);
+    }
+
+    $orderlineValuesString = implode(',', $orderlineValueArray);
+
+    var_dump($orderlineValuesString);
+
+
+    // Create connection
+    $conn = connectToDatabase();
+
+    $sql = "INSERT INTO orderlines (order_id, product_id, product_quantity) 
+        VALUES $orderlineValuesString";
+
+    try {
+        $result = mysqli_query($conn, $sql);
+        if (!$result) {
+            throw new Exception("saving order failed, sql:$sql, error" . mysqli_error($conn));
+        }
+    } finally {
+        mysqli_close($conn);
+    }
 }

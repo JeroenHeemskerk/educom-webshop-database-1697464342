@@ -88,8 +88,22 @@ input[type=radio] {
 
 .product-text {
     color: black;
+    display: flex;
+    flex-direction: column;
 }
 
 a:link {
     text-decoration: none;
+}
+
+.cart-quantity-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.cart-quantity-wrapper>form>button {
+    margin-bottom: 0px;
 }
