@@ -90,6 +90,11 @@ input[type=radio] {
     color: black;
     display: flex;
     flex-direction: column;
+
+    &>form>button {
+        margin-top: 10px;
+        margin-bottom: 0px;
+    }
 }
 
 a:link {

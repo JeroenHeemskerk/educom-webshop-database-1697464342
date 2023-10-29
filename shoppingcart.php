@@ -26,9 +26,13 @@ function getShoppingcartData()
         if (getPostVar('action') == 'completeOrder') {
             //als er op de complete order button geklikt is
             $userId = getLoggedInUserId();
-
-            completeOrder($userId);
-            //voor de order tabel nodig: user_id en total_amount
+            try {
+                completeOrder($userId);
+                $pageData['genericMessage'] = "Bedankt voor je bestelling!";
+            } catch (Exception $e) {
+                logError("order failed: " . $e->getMessage());
+                $pageData['genericErr'] = "Bestellen is op dit moment niet mogelijk. Probeer het later nog eens.";
+            }
         }
     }
 
@@ -107,12 +111,32 @@ function completeOrder($userId)
     $cart = $_SESSION['cart'];
     $total = calculateTotal($cart);
     //total is hier in centen opgeslagen
+
     require_once('database-connection.php');
     $orderId = writeOrderToDatabase($userId, $total);
     // in orderId zit nu de Id van de order!
+    $orderlineData = getOrderlineData($orderId, $cart);
 
-    writeOrderlinesToDatabase($orderId, $cart);
+    writeOrderlinesToDatabase($orderlineData);
+    $_SESSION['cart'] = [];
 }
 
 
-    // stap 3: maak je cart leeg.
+
+function getOrderlineData($orderId, $cart)
+{
+    // in orderline moet zitten: order_id, product_id, product quantity. 
+
+    $orderlineValueArray = [];
+
+
+    foreach ($cart as $productline) {
+        $orderline = "($orderId, " . $productline['id'] . ", " . $productline['amount'] . " )";
+
+        array_push($orderlineValueArray, $orderline);
+    }
+
+    $orderlineValuesString = implode(',', $orderlineValueArray);
+
+    return $orderlineValuesString;
+}

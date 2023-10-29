@@ -66,9 +66,6 @@ function saveUser($email, $name, $password)
     }
 }
 
-// tips van Nick: 
-//als je een SUM doet in een query, dan moet je group-by
-// eventueel JOIN gebruiken
 
 function getProductsFromDatabase()
 {
@@ -145,24 +142,9 @@ function writeOrderToDatabase($userId, $total)
 }
 
 
-function writeOrderlinesToDatabase($orderId, $cart)
+
+function writeOrderlinesToDatabase($orderlineValuesString)
 {
-    // in orderline moet zitten: order_id, product_id, product quantity. 
-
-    $orderlineValueArray = [];
-
-
-    foreach ($cart as $productline) {
-        $orderline = "($orderId, " . $productline['id'] . ", " . $productline['amount'] . " )";
-
-        array_push($orderlineValueArray, $orderline);
-    }
-
-    $orderlineValuesString = implode(',', $orderlineValueArray);
-
-    var_dump($orderlineValuesString);
-
-
     // Create connection
     $conn = connectToDatabase();
 

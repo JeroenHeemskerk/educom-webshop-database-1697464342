@@ -55,20 +55,6 @@ function showFormEnd($page, $submitButtonText)
 }
 
 
-//nieuwe functie: de html voor de productpagina staat nu hier. 
-// Deze functie kan ik later (voor shoppingcart) ook nog gebruiken.
-function showProduct($product, $userIsLoggedIn)
-{
-    echo "<div class='card-body'> <img class = 'product-img' src='" . $product['image_url'] . "' alt='soap image' width='400' height='300'></br>
-    <h4 class = 'card-title'>" . $product["name"] . "</h4></br>
-    <p class = 'card-text'>" . $product["description"] . "</p></br>
-    &#8364;" . number_format(($product['pricetag'] / 100), 2, ',') . "</br> </div>";
-    //button gedeelte conditioneel gemaakt
-    if ($userIsLoggedIn) {
-        showActionButton('product', 'add to cart', 'addToCart', $product["id"]);
-    }
-    //maak een extra hidden input, geef hem als naam: action en als value 'addToCart'
-}
 
 function showActionButton($page, $submitButtonText, $actionType, $productId = null)
 {
