@@ -1,68 +1,36 @@
 <?php
 
-function getShoppingcartData()
+function initializeShoppingcartData()
 {
-    $pageData = ["page" => "shoppingcart", "cart" => [], "total" => 0];
+    return ["page" => "shoppingcart", "cart" => [], "total" => 0];
+}
 
-    // GET of POST?
-    $requestType = $_SERVER['REQUEST_METHOD'];
-    if ($requestType == "POST") {
+function getShoppingcartData($pageData)
+{
 
-        //er zijn meerdere posts, namelijk order bevestigen. Maar addtocart en removefromcart zijn ook postrequests. 
-        //write order to database
-        // empty shoppingcart
-        require_once("product.php");
+    try {
+        $cart = getCart();
+        $productIds = array_keys($cart);
+        require_once("database-connection.php");
+        $products = getProductsFromDatabase($productIds);
 
-        if (getPostVar('action') == 'addToCart') {
-            $id = getPostVar('id');
-            incrementCartAmount($id);
+        foreach ($cart as $productId => $amount) {
+            // zoek naar de juiste index voor dit product
+            $column = array_column($products, 'id');
+            $index = array_search($productId, $column);
+
+            $product = $products[$index];
+            $subTotal = $amount * $product['pricetag'];
+            $pageData['total'] += $subTotal;
+            array_push($pageData['cart'], ['id' => $product['id'], 'name' => $product['name'], 'amount' => $amount, 'subTotal' => $subTotal, 'pricetag' => $product['pricetag'], 'image_url' => $product['image_url']]);
         }
-
-        if (getPostVar('action') == 'removeFromCart') {
-            $id = getPostVar('id');
-            removeFromCart($id);
-        }
-
-        if (getPostVar('action') == 'completeOrder') {
-            //als er op de complete order button geklikt is
-            $userId = getLoggedInUserId();
-            try {
-                completeOrder($userId);
-                $pageData['genericMessage'] = "Bedankt voor je bestelling!";
-            } catch (Exception $e) {
-                logError("order failed: " . $e->getMessage());
-                $pageData['genericErr'] = "Bestellen is op dit moment niet mogelijk. Probeer het later nog eens.";
-            }
-        }
+    } catch (Exception $e) {
+        logError("getting products failed: " . $e->getMessage());
+        $pageData['genericErr'] = "Er is een technisch probleem. Probeer het later nog eens.";
     }
-
-    //get shoppingcart items from session 
-    $cart = $_SESSION['cart'];
-
-    //bereken het totaal
-
-    $pageData['total'] = calculateTotal($cart);
-
-    //========================================
-
-    $pageData['cart'] = $cart;
 
     return $pageData;
 }
-
-
-function calculateTotal($cart)
-{
-    $total = 0;
-
-    foreach ($cart as $product) {
-        $totalForProduct = $product['amount'] * $product['pricetag'];
-        $total = $total + $totalForProduct;
-    }
-    return $total;
-}
-
-
 
 function showShoppingCart($pageData)
 {
@@ -98,45 +66,9 @@ function showProductLine($productLine)
     showActionButton('shoppingcart', '-', 'removeFromCart', $productLine['id']);
     echo "<span>Amount: " . $productLine['amount'] . "</span>";
     showActionButton('shoppingcart', '+', 'addToCart', $productLine['id']);
-    echo "</div> <span>Total: &euro;" . number_format(($productLine['amount'] * ($productLine['pricetag'] / 100)), 2, ",") . "</span>
+    echo "</div> <span>Total: &euro;" . number_format((($productLine['subTotal'] / 100)), 2, ",") . "</span>
                     </div>
                 </div>
             </a>
         </div>";
-}
-
-
-function completeOrder($userId)
-{
-    $cart = $_SESSION['cart'];
-    $total = calculateTotal($cart);
-    //total is hier in centen opgeslagen
-
-    require_once('database-connection.php');
-    $orderId = writeOrderToDatabase($userId, $total);
-    // in orderId zit nu de Id van de order!
-    $orderlineData = getOrderlineData($orderId, $cart);
-
-    writeOrderlinesToDatabase($orderlineData);
-    $_SESSION['cart'] = [];
-}
-
-
-
-function getOrderlineData($orderId, $cart)
-{
-    // in orderline moet zitten: order_id, product_id, product quantity. 
-
-    $orderlineValueArray = [];
-
-
-    foreach ($cart as $productline) {
-        $orderline = "($orderId, " . $productline['id'] . ", " . $productline['amount'] . " )";
-
-        array_push($orderlineValueArray, $orderline);
-    }
-
-    $orderlineValuesString = implode(',', $orderlineValueArray);
-
-    return $orderlineValuesString;
 }

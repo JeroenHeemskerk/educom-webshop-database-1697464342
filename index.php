@@ -3,8 +3,8 @@ include('session-manager.php');
 
 session_start();
 
-if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = [];
+if (!isCartInitialized()) {
+    initializeCart();
 }
 
 // ===================================
@@ -75,16 +75,24 @@ function processRequest($page)
             break;
         case 'webshop':
             require_once('webshop.php');
-            $pageData = getWebshopData();
-            // $pageData['page'] = $page;
+            require_once('product-service.php');
+            $pageData = initializeWebshopData();
+            $pageData = handleActions($pageData);
+            $pageData = getWebshopData($pageData);
             break;
         case 'product':
             require_once('product.php');
-            $pageData = getProductData();
+            require_once('product-service.php');
+            $pageData = initializeProductData();
+            $pageData = handleActions($pageData);
+            $pageData = getProductData($pageData);
             break;
         case 'shoppingcart':
             require_once('shoppingcart.php');
-            $pageData = getShoppingcartData();
+            require_once('product-service.php');
+            $pageData = initializeShoppingcartData();
+            $pageData = handleActions($pageData);
+            $pageData = getShoppingcartData($pageData);
             break;
         default:
             $pageData['page'] = 'not found';

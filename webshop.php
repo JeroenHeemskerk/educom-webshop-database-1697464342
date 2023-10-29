@@ -1,9 +1,12 @@
 <?php
 
-function getWebshopData()
+function initializeWebshopData()
 {
-    //initiate variables
-    $pageData = ['page' => 'webshop', 'products' => []];
+    return ['page' => 'webshop', 'products' => []];
+}
+
+function getWebshopData($pageData)
+{
     require_once('database-connection.php');
     try {
 

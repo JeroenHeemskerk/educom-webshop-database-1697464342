@@ -67,14 +67,19 @@ function saveUser($email, $name, $password)
 }
 
 
-function getProductsFromDatabase()
+function getProductsFromDatabase($productIds = [])
 {
     //een exception moet ín het try-blok
     //IN een try blok kan iets mis gaan
     $conn = connectToDatabase();
 
+    $sql = 'SELECT * FROM products';
 
-    $sql = "SELECT * FROM products";
+    if (!empty($productIds)) {
+        $productIdsAsString = implode(",", $productIds);
+        $sql = $sql . ' WHERE id IN (' . $productIdsAsString . ')';
+    }
+
     try {
         $result = mysqli_query($conn, $sql);
         if (!$result) {
